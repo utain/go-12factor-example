@@ -4,6 +4,7 @@ import (
 	v1 "go-example/app/services/api/v1"
 	"io"
 	"os"
+
 	// auto connect to sql
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 
@@ -18,9 +19,9 @@ var (
 		Short: "start server at port 5000",
 		Long:  `start server at port 5000`,
 		Run: func(cmd *cobra.Command, agrs []string) {
-			db, err := gorm.Open("sqlite3", "test.db")
+			db, err := gorm.Open("sqlite3", "./test.db")
 			if err != nil {
-				panic("failed to connect database")
+				panic("Failed to connect database: " + err.Error())
 			}
 			defer db.Close()
 			f, _ := os.Create("gin.log")
