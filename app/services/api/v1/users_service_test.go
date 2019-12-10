@@ -5,5 +5,4 @@ import (
 )
 
 func TestHTTPGetUsers(t *testing.T) {
-
 }
