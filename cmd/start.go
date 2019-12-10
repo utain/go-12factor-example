@@ -2,6 +2,8 @@ package cmd
 
 import (
 	v1 "go-example/app/services/api/v1"
+	"io"
+	"os"
 	// auto connect to sql
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 
@@ -21,12 +23,21 @@ var (
 				panic("failed to connect database")
 			}
 			defer db.Close()
-			r := gin.Default()
-			v1.Migrate(db)
-			service := v1.GetService(db)
-			r.GET("/user", service.GetAllUser)
-			r.GET("/user/:id", service.GetUser)
-			r.Run(":5000")
+			f, _ := os.Create("gin.log")
+			gin.DefaultWriter = io.MultiWriter(f)
+			router := gin.Default()
+			apiV1 := router.Group("/api/v1")
+			{
+				service := v1.NewUserService(db, true)
+				apiV1.GET("/users", service.GetAllUser)
+				apiV1.GET("/users/:id", service.GetUser)
+
+				prodServ := v1.NewProductService(db, true)
+				apiV1.GET("/products", prodServ.FindAll)
+				apiV1.GET("/products/:id", prodServ.GetProduct)
+				apiV1.DELETE("/products/:id", prodServ.DeleteProduct)
+			}
+			router.Run(":5000")
 		},
 	}
 )

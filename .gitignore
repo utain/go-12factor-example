@@ -1,2 +1,4 @@
 .vscode/settings.json
 *.db
+*.log
+go-example

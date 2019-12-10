@@ -1,12 +1,8 @@
-package model
-
-import (
-	"github.com/jinzhu/gorm"
-)
+package models
 
 // User model
 type User struct {
-	gorm.Model
+	Model
 	Username  string
 	Email     string
 	Password  string

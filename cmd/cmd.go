@@ -6,9 +6,9 @@ import (
 
 var (
 	rootCmd = &cobra.Command{
-		Use:   "gorm",
-		Short: "gorm is a very fast static site generator",
-		Long:  `gorm is command line`,
+		Use:   "go-example",
+		Short: "go-example is a very fast static site generator",
+		Long:  `go-example is command line`,
 	}
 )
 
