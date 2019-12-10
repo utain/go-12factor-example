@@ -7,8 +7,8 @@ import (
 var (
 	rootCmd = &cobra.Command{
 		Use:   "go-example",
-		Short: "go-example is a very fast static site generator",
-		Long:  `go-example is command line`,
+		Short: "go-example is example golang web service using gin and gorm",
+		Long:  `go-example is example golang web service using gin and gorm`,
 	}
 )
 

@@ -15,7 +15,7 @@ import (
 var (
 	startCmd = &cobra.Command{
 		Use:   "start",
-		Short: "start server",
+		Short: "start server at port 5000",
 		Long:  `start server at port 5000`,
 		Run: func(cmd *cobra.Command, agrs []string) {
 			db, err := gorm.Open("sqlite3", "test.db")
