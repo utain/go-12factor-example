@@ -5,6 +5,7 @@ import (
 	"go-example/app/models"
 	"go-example/app/services"
 	"net/http"
+	"reflect"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -42,7 +43,7 @@ func (p userAPI) GetAllUser(c *gin.Context) {
 // GetUser return only one User
 func (p userAPI) GetUser(c *gin.Context) {
 	user := p.userService.GetUser(c.Param("name"))
-	if *user == (models.User{}) {
+	if reflect.DeepEqual(*user, models.User{}) {
 		c.Status(http.StatusNotFound)
 		return
 	}

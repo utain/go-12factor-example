@@ -5,6 +5,7 @@ import (
 	"go-example/app/models"
 	"go-example/app/services"
 	"net/http"
+	"reflect"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -39,7 +40,7 @@ func (p productAPI) FindAll(ctx *gin.Context) {
 }
 func (p productAPI) GetProduct(ctx *gin.Context) {
 	product := p.productService.GetProduct(ctx.Param("id"))
-	if (models.Product{}) == *product {
+	if reflect.DeepEqual(models.Product{}, *product) {
 		ctx.Status(http.StatusNotFound)
 		return
 	}
