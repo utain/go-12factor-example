@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	v1 "go-example/app/services/api/v1"
+	v1 "go-example/app/api/v1"
 	"io"
 	"os"
 
