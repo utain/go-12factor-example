@@ -29,11 +29,11 @@ var (
 			router := gin.Default()
 			apiV1 := router.Group("/api/v1")
 			{
-				service := v1.NewUserService(db, true)
+				service := v1.NewUserAPI(db, true)
 				apiV1.GET("/users", service.GetAllUser)
-				apiV1.GET("/users/:id", service.GetUser)
+				apiV1.GET("/users/:name", service.GetUser)
 
-				prodServ := v1.NewProductService(db, true)
+				prodServ := v1.NewProductAPI(db, true)
 				apiV1.GET("/products", prodServ.FindAll)
 				apiV1.GET("/products/:id", prodServ.GetProduct)
 				apiV1.DELETE("/products/:id", prodServ.DeleteProduct)
