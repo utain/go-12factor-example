@@ -5,11 +5,20 @@ import (
 	"go-example/app/models"
 	"go-example/app/services"
 	"net/http"
+	"os"
 	"reflect"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
+	"github.com/sirupsen/logrus"
 )
+
+var log = logrus.New()
+
+func init() {
+	log.Out = os.Stdout
+	log.Debug("Init users")
+}
 
 // NewUserAPI create userService
 func NewUserAPI(db *gorm.DB, autoMigrate bool) UserAPI {
@@ -42,7 +51,12 @@ func (p userAPI) GetAllUser(c *gin.Context) {
 
 // GetUser return only one User
 func (p userAPI) GetUser(c *gin.Context) {
-	user := p.userService.GetUser(c.Param("name"))
+	username := c.Param("name")
+	if username == "" {
+		c.Status(http.StatusBadRequest)
+		return
+	}
+	user := p.userService.GetUser(username)
 	if reflect.DeepEqual(*user, models.User{}) {
 		c.Status(http.StatusNotFound)
 		return

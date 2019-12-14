@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/suite"
 )
 
-type Suite struct {
+type UserServiceTestSuite struct {
 	suite.Suite
 	DB   *gorm.DB
 	mock sqlmock.Sqlmock
@@ -22,7 +22,7 @@ type Suite struct {
 	person  *models.User
 }
 
-func (s *Suite) SetupSuite() {
+func (s *UserServiceTestSuite) SetupSuite() {
 	var (
 		db  *sql.DB
 		err error
@@ -35,15 +35,10 @@ func (s *Suite) SetupSuite() {
 	require.NoError(s.T(), err)
 
 	s.DB.LogMode(true)
-
 	s.service = services.NewUserService(s.DB)
 }
 
-func TestInit(t *testing.T) {
-	suite.Run(t, new(Suite))
-}
-
-func (s *Suite) Test_service_Get_User() {
+func (s *UserServiceTestSuite) TestServiceGetUser() {
 	s.mock.ExpectQuery(regexp.QuoteMeta(
 		`SELECT * FROM "users"  WHERE "users"."deleted_at" IS NULL AND (("users"."username" = $1)) ORDER BY "users"."id" ASC LIMIT 1`)).
 		WithArgs("utain").
@@ -53,4 +48,8 @@ func (s *Suite) Test_service_Get_User() {
 	res := s.service.GetUser("utain")
 	s.Assert().Contains(res.ID, "1")
 	s.Assert().Contains(res.Username, "utain")
+}
+
+func TestUserServiceTestSuite(t *testing.T) {
+	suite.Run(t, new(UserServiceTestSuite))
 }
