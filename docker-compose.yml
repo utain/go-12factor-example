@@ -1,16 +1,16 @@
 version: "3.7"
 
-networks: 
+networks:
   app-network:
 services:
   go-example:
     build: .
     container_name: go-example
-    image: utainwp/go-example
+    image: utain/go-example
     entrypoint: "/bin/go-example start"
-    expose: 
+    expose:
       - "5000"
-    ports: 
+    ports:
       - "5000:5000"
-    networks: 
+    networks:
       - app-network
