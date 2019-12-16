@@ -7,4 +7,4 @@ steps:
   image: golang
   commands:
   - make test
-  - make build
+  - make build-linux
