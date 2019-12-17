@@ -8,8 +8,3 @@ steps:
   commands:
   - make test
   - make build
-- name: publish-docker
-  image: plugins/docker
-  commands:
-  - docker-compose build
-  - docker push utain/go-example
