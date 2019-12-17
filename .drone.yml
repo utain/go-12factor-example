@@ -1,5 +1,5 @@
 kind: pipeline
-type: docker
+type: kubernetes
 name: default
 
 steps:
@@ -8,7 +8,8 @@ steps:
   commands:
   - make test
   - make build
-- name: publish docker
+- name: publish-docker
+  image: plugins/docker
   commands:
   - docker-compose build
   - docker push utain/go-example
