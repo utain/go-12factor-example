@@ -3,7 +3,7 @@ package models
 // ProductProps model
 type ProductProps struct {
 	Model
-	Key        string
-	Value      string
-	ProductRef string
+	Key        string `json:"key"`
+	Value      string `json:"value"`
+	ProductRef string `json:"product_ref"`
 }
