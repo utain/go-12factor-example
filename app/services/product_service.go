@@ -31,7 +31,7 @@ func (p productService) FindAll(offset int, limit int, search string) *[]models.
 
 func (p productService) GetProduct(id string) *models.Product {
 	var product models.Product
-	p.db.First(&product, models.Product{Model: models.Model{ID: id}})
+	p.db.Preload("Props").First(&product, models.Product{Model: models.Model{ID: id}})
 	return &product
 }
 

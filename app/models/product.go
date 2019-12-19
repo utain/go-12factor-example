@@ -9,10 +9,11 @@ import "fmt"
 // Product model
 type Product struct {
 	Model
-	Name  string
-	Code  string
-	Price uint
-	Attr  AttrType `gorm:"type:text"`
+	Name  string         `json:"name"`
+	Code  string         `json:"code"`
+	Price uint           `json:"price"`
+	Attr  AttrType       `json:"attr" gorm:"type:text"`
+	Props []ProductProps `json:"props" gorm:"foreignkey:ProductRef;"`
 }
 
 // AttrType example for custom sql data type using build in interface
@@ -30,4 +31,9 @@ func (attr *AttrType) Scan(src interface{}) error {
 	fmt.Println("Scane:", src)
 	err := json.Unmarshal([]byte(src.(string)), &attr)
 	return err
+}
+
+func (p Product) String() string {
+	str, _ := json.Marshal(p)
+	return string(str)
 }

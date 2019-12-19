@@ -26,12 +26,13 @@ type productAPI struct {
 func NewProductAPI(db *gorm.DB, autoMigrate bool) ProductAPI {
 	if autoMigrate {
 		fmt.Println("Migrating Product model")
-		db.AutoMigrate(&models.Product{})
+		db.AutoMigrate(&models.Product{}, &models.ProductProps{})
 		db.Create(models.Product{
 			Model: models.Model{ID: "1"}, Name: "MacBook Pro 13 2019", Code: "mbp132019", Price: 2999, Attr: models.AttrType{
 				"with":   "23m",
 				"height": "32m",
 			},
+			Props: []models.ProductProps{models.ProductProps{Model: models.Model{ID: "1"}, Key: "Name", Value: "MacDev"}},
 		})
 	}
 	return &productAPI{productService: services.NewProductService(db)}

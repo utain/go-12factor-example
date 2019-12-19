@@ -7,8 +7,8 @@ import "time"
 //      gorm.Model
 //    }
 type Model struct {
-	ID        string `gorm:"primary_key"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt *time.Time `sql:"index"`
+	ID        string     `json:"id" gorm:"primary_key"`
+	CreatedAt time.Time  `json:"created_at"`
+	UpdatedAt time.Time  `json:"updated_at"`
+	DeletedAt *time.Time `json:"deleted_at" sql:"index"`
 }
