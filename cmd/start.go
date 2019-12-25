@@ -1,9 +1,12 @@
 package cmd
 
 import (
+	"fmt"
 	v1 "go-example/app/api/v1"
+	"go-example/app/config"
 	"io"
 	"os"
+	"strconv"
 
 	// auto connect to sql
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
@@ -14,26 +17,34 @@ import (
 )
 
 var (
-	startCmd = &cobra.Command{
+	configPath string
+	startCmd   = &cobra.Command{
 		Use:   "start",
-		Short: "start server at port 5000",
-		Long:  `start server at port 5000`,
+		Short: "start server",
+		Long:  `start server, default port is 5000`,
 		Run: func(cmd *cobra.Command, agrs []string) {
-			db, err := gorm.Open("sqlite3", "./test.db")
+			config.Read(configPath)
+			conf, err := config.AllConf()
+			fmt.Println("[all-conf]:", conf)
+			db, err := gorm.Open(conf.Database.Type, conf.Database.URL)
 			if err != nil {
-				panic("Failed to connect database: " + err.Error())
+				panic(fmt.Errorf("Failed to connect database: %w", err))
 			}
 			defer db.Close()
-			fileLog, _ := os.Create("gin.log")
+			fileLog, _ := os.Create(conf.Logging.Path)
 			gin.DefaultWriter = io.MultiWriter(fileLog)
 			router := gin.Default()
 			apiV1Router := router.Group("/api/v1")
 			v1.RegisterRouterAPIV1(apiV1Router, db)
-			router.Run(":5000")
+			router.Run(":" + strconv.Itoa(conf.Port))
 		},
 	}
 )
 
 func init() {
+	startCmd.Flags().Int("port", 5000, "Port to run Application server on")
+	startCmd.Flags().StringVar(&configPath, "config", "", "Path to config file for App server")
+	config.Viper().BindPFlag("port", startCmd.Flags().Lookup("port"))
+	config.Viper().BindPFlag("config", startCmd.Flags().Lookup("config"))
 	rootCmd.AddCommand(startCmd)
 }
