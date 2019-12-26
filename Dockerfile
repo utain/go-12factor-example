@@ -17,6 +17,7 @@ RUN go build -i -a -v .
 FROM alpine:latest
 ENV GIN_MODE=release
 RUN apk --no-cache add ca-certificates
+COPY ./config /etc/go-example/
 WORKDIR /root/
 EXPOSE 5000
 COPY --from=0 /app/go-example /bin/go-example
