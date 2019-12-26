@@ -23,9 +23,8 @@ var (
 		Short: "start server",
 		Long:  `start server, default port is 5000`,
 		Run: func(cmd *cobra.Command, agrs []string) {
-			config.Read(configPath)
-			conf, err := config.AllConf()
-			fmt.Println("[all-conf]:", conf)
+			conf, _ := config.Read(configPath)
+			fmt.Println("[Start server with config]:", conf)
 			db, err := gorm.Open(conf.Database.Type, conf.Database.URL)
 			if err != nil {
 				panic(fmt.Errorf("Failed to connect database: %w", err))

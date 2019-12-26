@@ -2,6 +2,6 @@ server:
   port: 5000
 database:
   type: sqlite3
-  # url: ./test.db
+  url: ./test.db
 logging:
   path: gin.log
