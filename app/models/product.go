@@ -13,7 +13,7 @@ type Product struct {
 	Code  string         `json:"code"`
 	Price uint           `json:"price"`
 	Attr  AttrType       `json:"attr" gorm:"type:text"`
-	Props []ProductProps `json:"props" gorm:"foreignkey:ProductRef;"`
+	Props []ProductProps `json:"props" gorm:"foreignkey:ProductRef;association_foreignkey:Code;"`
 }
 
 // AttrType example for custom sql data type using build in interface
