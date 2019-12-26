@@ -79,3 +79,14 @@ docker-compose up # run on docker
 docker-compose up --build # build and run
 docker push [image-name]
 ```
+
+
+### Configuration
+[Viper](https://github.com/spf13/viper#why-viper) uses the following precedence order. Each item takes precedence over the item below it:
+
+- explicit call to Set
+- flag
+- env
+- config
+- key/value store
+- default
