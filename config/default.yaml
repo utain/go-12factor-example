@@ -3,5 +3,5 @@ server:
 database:
   type: sqlite3
   # url: ./test.db
-loging:
+logging:
   path: gin.log
