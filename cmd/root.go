@@ -13,6 +13,6 @@ var (
 )
 
 // Execute root command
-func Execute() {
-	rootCmd.Execute()
+func Execute() error {
+	return rootCmd.Execute()
 }
