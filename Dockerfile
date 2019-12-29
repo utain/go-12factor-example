@@ -1,4 +1,4 @@
-FROM golang:1.13-alpine
+FROM golang:1.13-alpine as gobuilder
 
 ENV GIN_MODE=release
 
@@ -12,13 +12,13 @@ ADD ./go.sum /app/go.sum
 RUN go mod download
 
 ADD . /app
-RUN go build -i -a -v .
+RUN go build -i -v -o ./server ./cmd/server
 
 FROM alpine:latest
 ENV GIN_MODE=release
 RUN apk --no-cache add ca-certificates
-COPY ./config /etc/go-example/
+COPY ./config /etc/config/
 WORKDIR /root/
 EXPOSE 5000
-COPY --from=0 /app/go-example /bin/go-example
-CMD ["/bin/go-example", "start"]
+COPY --from=gobuilder /app/server /bin/server
+CMD ["/bin/server", "start"]

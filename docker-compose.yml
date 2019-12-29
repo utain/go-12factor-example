@@ -7,7 +7,6 @@ services:
     build: .
     container_name: go-example
     image: utain/go-example
-    entrypoint: "/bin/go-example start"
     expose:
       - "5000"
     ports:

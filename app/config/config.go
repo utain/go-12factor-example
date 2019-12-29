@@ -15,8 +15,8 @@ func init() {
 	runtimeViper.WriteConfig()
 	runtimeViper.SetDefault("port", 5000)
 	runtimeViper.SetConfigName("default")
-	runtimeViper.AddConfigPath("/etc/go-example")
-	runtimeViper.AddConfigPath("$HOME/.go-example")
+	runtimeViper.AddConfigPath("/etc/config/")
+	runtimeViper.AddConfigPath("$HOME/.config/")
 	runtimeViper.AddConfigPath("./config")
 }
 
