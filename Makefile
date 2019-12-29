@@ -1,27 +1,27 @@
 # OS
-OSFLAG 				    :=
+OSNAME 				    :=
 BINARY_NAME_FILE  :=
 ifeq ($(OS),Windows_NT)
-	OSFLAG=windows
+	OSNAME=windows
 else
 	UNAME_S :=$(shell uname -s)
 	ifeq ($(UNAME_S),Linux)
-		OSFLAG=linux
+		OSNAME=linux
 	endif
 	ifeq ($(UNAME_S),Darwin)
-		OSFLAG=drawin
+		OSNAME=drawin
 	endif
 endif
 
 hello:
-	@echo $(OSFLAG)
+	@echo $(OSNAME)
 
 # Env
 CGO_ENABLED=1
 GOCMD=go
 GOARCH=amd64
 BINARY_NAME=server
-BINARY_NAME_FILE =./dist/$(OSFLAG)/$(BINARY_NAME)
+BINARY_NAME_FILE =./dist/$(OSNAME)/$(BINARY_NAME)
 BINARY_NAME_LINUX=./dist/linux/$(BINARY_NAME)
 BINARY_NAME_MACOS=./dist/drawin/$(BINARY_NAME)
 BINARY_NAME_WIN=./dist/windows/$(BINARY_NAME).exe
