@@ -18,15 +18,15 @@ Trying to implement follow [The Twelve Factor App](https://12factor.net/)
 ├── LICENSE
 ├── Makefile
 ├── README.md
-├── app
+├── cmd
+│   ├── othercmd # example other command line app
+│   └── server   # start reading code from here
+├── internal
 │   ├── api
 │   ├── config
 │   ├── models
 │   ├── services
 │   └── utils
-├── cmd
-│   ├── othercmd # example other command line app
-│   └── server   # start reading code from here
 ├── config
 │   └── default.yaml
 ├── dist
