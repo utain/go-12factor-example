@@ -1,7 +1,7 @@
 package services
 
 import (
-	"go-example/app/models"
+	"go-example/internal/models"
 	"log"
 
 	"github.com/jinzhu/gorm"

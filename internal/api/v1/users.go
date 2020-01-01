@@ -2,8 +2,8 @@ package v1
 
 import (
 	"fmt"
-	"go-example/app/models"
-	"go-example/app/services"
+	"go-example/internal/models"
+	"go-example/internal/services"
 	"net/http"
 	"os"
 	"reflect"

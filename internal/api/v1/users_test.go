@@ -1,28 +1,33 @@
-package services_test
+package v1_test
 
 import (
 	"database/sql"
-	"go-example/app/models"
-	"go-example/app/services"
+	v1 "go-example/internal/api/v1"
+	"go-example/internal/models"
+	"log"
+	"net/http"
+	"net/http/httptest"
+	"os"
 	"regexp"
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 )
 
-type UserServiceTestSuite struct {
+type UserAPITestSuite struct {
 	suite.Suite
 	DB   *gorm.DB
 	mock sqlmock.Sqlmock
 
-	service services.UserService
-	person  *models.User
+	api    v1.UserAPI
+	person *models.User
 }
 
-func (s *UserServiceTestSuite) SetupSuite() {
+func (s *UserAPITestSuite) SetupSuite() {
 	var (
 		db  *sql.DB
 		err error
@@ -35,21 +40,24 @@ func (s *UserServiceTestSuite) SetupSuite() {
 	require.NoError(s.T(), err)
 
 	s.DB.LogMode(true)
-	s.service = services.NewUserService(s.DB)
-}
 
-func (s *UserServiceTestSuite) TestServiceGetUser() {
+	s.api = v1.NewUserAPI(s.DB, true)
 	s.mock.ExpectQuery(regexp.QuoteMeta(
 		`SELECT * FROM "users"  WHERE "users"."deleted_at" IS NULL AND (("users"."username" = $1)) ORDER BY "users"."id" ASC LIMIT 1`)).
 		WithArgs("utain").
 		WillReturnRows(sqlmock.NewRows([]string{"id", "username"}).
 			AddRow("1", "utain"))
-
-	res := s.service.GetUser("utain")
-	s.Assert().Contains(res.ID, "1")
-	s.Assert().Contains(res.Username, "utain")
+}
+func (s *UserAPITestSuite) TestHTTPGetUsers() {
+	router := gin.Default()
+	router.GET("/:name", s.api.GetUser)
+	res := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/utain", nil)
+	router.ServeHTTP(res, req)
+	log.SetOutput(os.Stdout)
+	s.Equal(http.StatusOK, res.Code, "Status must be 200:OK")
 }
 
-func TestUserServiceTestSuite(t *testing.T) {
-	suite.Run(t, new(UserServiceTestSuite))
+func TestUserAPITestSuite(t *testing.T) {
+	suite.Run(t, new(UserAPITestSuite))
 }
