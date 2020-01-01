@@ -12,29 +12,30 @@ Trying to implement follow [The Twelve Factor App](https://12factor.net/)
 7. HTTP Server: github.com/gin-gonic/gin
 
 ### Project structure
-```
+```sh
 .
 ├── Dockerfile
+├── LICENSE
 ├── Makefile
 ├── README.md
 ├── app
-│   ├── api/v1
+│   ├── api
 │   ├── config
-│   ├── log
 │   ├── models
 │   ├── services
 │   └── utils
 ├── cmd
-│   ├── root.go
-│   ├── start.go
-│   └── version.go
+│   ├── othercmd # example other command line app
+│   └── server   # start reading code from here
 ├── config
 │   └── default.yaml
+├── dist
+│   ├── drawin
+│   ├── linux
+│   └── windows
 ├── docker-compose.yml
-├── exam.db
 ├── go.mod
-├── go.sum
-└── main.go
+└── go.sum
 ```
 
 ### Get started
@@ -58,7 +59,7 @@ Linux/Windows
 
 Run project without build
 ```sh
-go run . [command] --[flag-name]=[flag-value]
+go run ./cmd/server [command] --[flag-name]=[flag-value]
 ```
 
 Build using `make` command
@@ -69,6 +70,8 @@ make build[-mac|win|linux]
 make all
 # Running test
 make test
+# Start server without build binary file
+make run
 ```
 
 Build with docker
@@ -77,7 +80,7 @@ docker-compose build # build docker image
 docker-compose up # run on docker
 # or 
 docker-compose up --build # build and run
-docker push [image-name]
+docker push [image-name] # public docker image to registry
 ```
 
 

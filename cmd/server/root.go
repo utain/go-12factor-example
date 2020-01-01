@@ -6,9 +6,9 @@ import (
 
 var (
 	rootCmd = &cobra.Command{
-		Use:   "go-example",
-		Short: "go-example is example golang web service using gin and gorm",
-		Long:  `go-example is example golang web service using gin and gorm`,
+		Use:   "server",
+		Short: "server is example cmd app build with golang",
+		Long:  `server is example golang web service using gin and gorm`,
 	}
 )
 

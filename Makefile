@@ -21,12 +21,19 @@ CGO_ENABLED=1
 GOCMD=go
 GOARCH=amd64
 BINARY_NAME=server
-BINARY_NAME_FILE =./dist/$(OSNAME)/$(BINARY_NAME)
-BINARY_NAME_LINUX=./dist/linux/$(BINARY_NAME)
-BINARY_NAME_MACOS=./dist/drawin/$(BINARY_NAME)
-BINARY_NAME_WIN=./dist/windows/$(BINARY_NAME).exe
-build:
+BINARY_NAME_FILE =./dist/$(OSNAME)/
+BINARY_NAME_LINUX=./dist/linux/
+BINARY_NAME_MACOS=./dist/drawin/
+BINARY_NAME_WIN=./dist/windows/
+prebuild:
+	mkdir -p ./dist/$(OSNAME)/
+prebuild-all:
+	mkdir -p $(BINARY_NAME_LINUX)
+	mkdir -p $(BINARY_NAME_MACOS)
+	mkdir -p $(BINARY_NAME_WIN)
+_dist_os:
 	$(GOCMD) build -i -v -o $(BINARY_NAME_FILE) ./cmd/...
+build: prebuild _dist_os
 build-linux:
 	CC="x86_64-linux-musl-gcc" CXX="x86_64-linux-musl-g++" GOOS=linux $(GOCMD) build -i -v -o $(BINARY_NAME_LINUX) ./cmd/...
 build-mac:
@@ -36,9 +43,15 @@ build-win:
 test:
 	$(GOCMD) test -v ./...
 clean:
-	$(GOCMD) clean
-	rm -rf ./dist
+	$(GOCMD) clean ./...
+	rm -rf ./dist/
 download:
 	go mod download
 build-all: build-mac build-win build-linux
-all: test build-all
+all: test prebuild-all build-all
+run:
+	$(GOCMD) run ./cmd/server start
+build-image:
+	docker-compose build
+run-docker:
+	docker-compose up --build
