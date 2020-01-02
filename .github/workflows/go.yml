@@ -1,0 +1,24 @@
+name: Go
+on: [push]
+jobs:
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Set up Go 1.13
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.13
+      id: go
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v1
+
+    - name: Docker Login
+      run: docker login docker.pkg.github.com --username ${{secrets.GITHUB_ACTOR}} --password ${{ secrets.GITHUB_TOKEN }}
+    - name: Build docker
+      run: docker build -t docker.pkg.github.com/utain/go-12factor-example/server:latest .
+    - name: Push docker image to github
+      run: docker push docker.pkg.github.com/utain/go-12factor-example/server:latest
