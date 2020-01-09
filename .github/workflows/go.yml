@@ -14,5 +14,3 @@ jobs:
       run: docker build -t docker.pkg.github.com/utain/go-12factor-example/go-server:latest .
     - name: Push docker image to github
       run: docker push docker.pkg.github.com/utain/go-12factor-example/go-server:latest
-    - name: Push docker image to github with tag name
-      run: docker tag docker.pkg.github.com/utain/go-12factor-example/go-server:latest docker.pkg.github.com/utain/go-12factor-example/go-server:${{GITHUB_REF/refs\/tags\//}}
