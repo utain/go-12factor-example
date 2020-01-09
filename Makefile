@@ -13,9 +13,6 @@ else
 	endif
 endif
 
-hello:
-	@echo $(OSNAME)
-
 # Env
 CGO_ENABLED=1
 GOCMD=go
@@ -27,7 +24,8 @@ BINARY_NAME_MACOS=./dist/drawin/
 BINARY_NAME_WIN=./dist/windows/
 GIT_COMMIT=$(shell git rev-list -1 HEAD)
 VERSION=$(shell date "+%Y.%m.%d.%H:%M:%S")
-BUILD_FLAGS=-i -v -ldflags "-X main.GitCommit=$(GIT_COMMIT) -X main.Version=$(VERSION)"
+GIT_TAG=$(shell git describe --all)
+BUILD_FLAGS=-i -v -ldflags "-X main.GitCommit=$(GIT_COMMIT) -X main.Version=$(GIT_TAG) -X main.BuildDate=$(VERSION)"
 prebuild:
 	mkdir -p ./dist/$(OSNAME)/
 prebuild-all:
