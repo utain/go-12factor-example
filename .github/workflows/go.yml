@@ -1,5 +1,5 @@
 name: Go
-on: [push,release]
+on: [release]
 jobs:
 
   build:
