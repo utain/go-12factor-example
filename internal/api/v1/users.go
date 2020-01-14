@@ -44,10 +44,6 @@ func (p userAPI) GetAllUser(c *gin.Context) {
 // GetUser return only one User
 func (p userAPI) GetUser(c *gin.Context) {
 	username := c.Param("name")
-	if username == "" {
-		c.Status(http.StatusBadRequest)
-		return
-	}
 	user := p.userService.GetUser(username)
 	if reflect.DeepEqual(*user, models.User{}) {
 		c.Status(http.StatusNotFound)
