@@ -1,0 +1,7 @@
+server:
+  port: 5000
+database:
+  url: host=localhost port=5432 user=example dbname=example password=P@55w0rd sslmode=disable
+  type: postgres
+logging:
+  path: gin.log

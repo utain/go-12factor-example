@@ -1,0 +1,29 @@
+version: "3.7"
+
+networks:
+  app-network:
+services:
+  go-example:
+    build: .
+    container_name: go-server
+    image: docker.pkg.github.com/utain/go-12factor-example/go-server:latest
+    environment:
+      DATABASE_TYPE: postgres
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      DATABASE_URL: host=db port=5432 user=example dbname=example password=P@55w0rd sslmode=disable
+    ports:
+      - "5000:5000"
+    networks:
+      - app-network
+  db:
+    image: postgres:12.1-alpine
+    container_name: postgres
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_PASSWORD=P@55w0rd
+      - POSTGRES_USER=example
+      - POSTGRES_DB=example
+    networks:
+      - app-network
