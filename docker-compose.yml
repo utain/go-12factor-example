@@ -3,7 +3,7 @@ version: "3.7"
 networks:
   app-network:
 services:
-  go-example:
+  server:
     build: .
     container_name: go-server
     image: docker.pkg.github.com/utain/go-12factor-example/go-server:latest

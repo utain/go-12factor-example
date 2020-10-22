@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	// auto connect to sql
+	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
@@ -61,6 +62,7 @@ func startServer(cmd *cobra.Command, agrs []string) {
 	}
 	defer db.Close()
 	router := gin.Default()
+	pprof.Register(router, "monitor/pprof")
 	apiV1Router := router.Group("/api/v1")
 	v1.RegisterRouterAPIV1(apiV1Router, db)
 	router.Run(":" + config.Get("port"))
