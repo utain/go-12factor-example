@@ -29,9 +29,9 @@ func init() {
 
 func migrateCMDRunner(cmd *cobra.Command, agrs []string) {
 	log.Info("Start migrate")
-	db, err := gorm.Open(config.Viper().GetString("database.type"), config.Viper().GetString("database.url"))
+	db, err := gorm.Open("postgres", config.AllConf().Database.URL)
 	if err != nil {
-		log.Fatalf("Failed to connect database[%v]: %w", config.Get("database.type"), err)
+		log.Fatalf("Failed to connect database[%v]: %w", config.AllConf().Database.URL, err)
 	}
 	defer db.Close()
 	models.AutoMigrate(db)

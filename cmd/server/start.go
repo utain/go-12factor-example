@@ -5,7 +5,7 @@ import (
 	v1 "go-example/internal/api/v1"
 	"go-example/internal/config"
 	"go-example/internal/models"
-	"log"
+	"go-example/log"
 	"strings"
 
 	// auto connect to sql
@@ -49,15 +49,15 @@ func initConfig() {
 	if err := config.Viper().ReadInConfig(); err != nil {
 		log.Fatalf("Using config file [%s]: %v", config.Viper().ConfigFileUsed(), err)
 	}
-	fmt.Println("Config paths:", config.Viper().ConfigFileUsed())
-	fmt.Println("DBType:", config.Viper().GetString("database.type"), len(config.Viper().GetString("database.url")))
+	log.Info("Config paths:", config.Viper().ConfigFileUsed())
+	log.Info("DBConnection:", len(config.Viper().GetString("database.url")))
 }
 
 func startServer(cmd *cobra.Command, agrs []string) {
-	fmt.Println("Start http-server")
-	db, err := gorm.Open(config.Get("database.type"), config.Get("database.url"))
+	log.Info("Start http-server")
+	db, err := gorm.Open("postgres", config.AllConf().Database.URL)
 	if err != nil {
-		panic(fmt.Errorf("Failed to connect database: %w", err))
+		log.Fatalf("Failed to connect database: %w", err)
 	}
 	defer db.Close()
 	go models.AutoMigrate(db)
@@ -65,5 +65,5 @@ func startServer(cmd *cobra.Command, agrs []string) {
 	pprof.Register(router, "monitor/pprof")
 	apiV1Router := router.Group("/api/v1")
 	v1.RegisterRouterAPIV1(apiV1Router, db)
-	router.Run(":" + config.Get("port"))
+	router.Run(fmt.Sprintf(":%d", config.AllConf().Port))
 }
