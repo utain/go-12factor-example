@@ -3,6 +3,7 @@ package config
 import (
 	"encoding/json"
 	"fmt"
+	"go-example/log"
 	"strconv"
 
 	"github.com/spf13/viper"
@@ -11,7 +12,7 @@ import (
 var runtimeViper = viper.New()
 
 func init() {
-	fmt.Println("INIT CONFIG")
+	log.Debug("INIT CONFIG")
 }
 
 // Config struct

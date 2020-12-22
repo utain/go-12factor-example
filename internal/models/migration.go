@@ -1,7 +1,7 @@
 package models
 
 import (
-	"fmt"
+	"go-example/log"
 	"time"
 
 	"github.com/jinzhu/gorm"
@@ -9,10 +9,11 @@ import (
 
 //AutoMigrate for migrate database schema
 func AutoMigrate(db *gorm.DB) {
-	fmt.Println("Migrating User model")
+	log.Debug("Migrating User model")
 	if err := db.AutoMigrate(&User{}, &Product{}, &ProductProps{}).Error; err != nil {
-		fmt.Printf("Can't automigrate schema %v", err)
+		log.Debugf("Can't automigrate schema %v", err)
 	}
+	InitData(db)
 }
 
 //InitData using for initial data when first time install
@@ -36,5 +37,5 @@ func InitData(db *gorm.DB) {
 
 	prod := &Product{}
 	db.Preload("Props").First(prod)
-	fmt.Println("Product:", prod)
+	log.Debug("Product:", prod)
 }

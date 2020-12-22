@@ -2,7 +2,7 @@ package services
 
 import (
 	"go-example/internal/models"
-	"log"
+	"go-example/log"
 
 	"github.com/jinzhu/gorm"
 )
@@ -36,11 +36,11 @@ func (p productService) GetProduct(id string) *models.Product {
 }
 
 func (p productService) DeleteProduct(id string) error {
-	log.Println("DeleteProduct with ID=" + id)
+	log.Debug("DeleteProduct with ID=", id)
 	tx := p.db.Begin()
 	rs := tx.Delete(&models.Product{Model: models.Model{ID: id}}).Where("id=?", id)
 	if rs.Error != nil {
-		log.Fatal("[Error]:", rs.Error)
+		log.Error("[Error]:", rs.Error)
 		tx.Rollback()
 	}
 	tx.Commit()

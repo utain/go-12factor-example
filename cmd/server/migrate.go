@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"go-example/internal/config"
 	"go-example/internal/models"
+	"go-example/log"
 
 	// auto connect to sql
 
@@ -28,10 +28,10 @@ func init() {
 }
 
 func migrateCMDRunner(cmd *cobra.Command, agrs []string) {
-	fmt.Println("Start migrate")
+	log.Info("Start migrate")
 	db, err := gorm.Open(config.Viper().GetString("database.type"), config.Viper().GetString("database.url"))
 	if err != nil {
-		panic(fmt.Errorf("Failed to connect database[%v]: %w", config.Get("database.type"), err))
+		log.Fatalf("Failed to connect database[%v]: %w", config.Get("database.type"), err)
 	}
 	defer db.Close()
 	models.AutoMigrate(db)

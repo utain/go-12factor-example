@@ -1,4 +1,4 @@
-FROM golang:1.13-alpine as gobuilder
+FROM golang:alpine as gobuilder
 
 ENV GIN_MODE=release
 

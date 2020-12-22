@@ -5,10 +5,8 @@ import (
 	"fmt"
 	v1 "go-example/internal/api/v1"
 	"go-example/internal/models"
-	"log"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"regexp"
 	"testing"
 
@@ -58,21 +56,18 @@ func (s *UserAPITestSuite) TestHTTPGetUsers() {
 	res := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/api/v1/users/utain", nil)
 	s.router.ServeHTTP(res, req)
-	log.SetOutput(os.Stdout)
 	s.Equal(http.StatusOK, res.Code, "Status must be 200:OK")
 }
 func (s *UserAPITestSuite) TestHTTPGetUsersWithEmptyData() {
 	res := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/api/v1/users/otheruser", nil)
 	s.router.ServeHTTP(res, req)
-	log.SetOutput(os.Stdout)
 	s.Equal(http.StatusNotFound, res.Code, "Status must be 404:NotFound")
 }
 func (s *UserAPITestSuite) TestHTTPGetAllUsers() {
 	res := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/api/v1/users", nil)
 	s.router.ServeHTTP(res, req)
-	log.SetOutput(os.Stdout)
 	s.Equal(http.StatusOK, res.Code, "Status must be 200:OK")
 }
 

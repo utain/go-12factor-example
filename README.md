@@ -2,16 +2,18 @@
 
 Trying to implement follow [The Twelve Factor App](https://12factor.net/)
 
-### Dependencies
+## Dependencies
+
 1. Command-line interface: github.com/spf13/cobra
 2. Configuration: github.com/spf13/viper
 3. Testing: github.com/stretchr/testify
 4. Mocking DB: github.com/DATA-DOG/go-sqlmock
 5. ORM: github.com/jinzhu/gorm
-6. Logging: github.com/sirupsen/logrus [todo]
+6. Logging: github.com/op/go-logging
 7. HTTP Server: github.com/gin-gonic/gin
 
-### Project structure
+## Project structure
+
 ```sh
 .
 ├── Dockerfile
@@ -38,31 +40,40 @@ Trying to implement follow [The Twelve Factor App](https://12factor.net/)
 └── go.sum
 ```
 
-### Get started
+## Get started
 
-**Cross platform build environment setup**
+### Cross platform build environment setup
 
-macOS
+**macOS**
+
 ```sh
 # install dep to build binary for linux and windows
 brew install FiloSottile/musl-cross/musl-cross
 brew install mingw-w64
 ```
 
-Linux/Windows
+**Linux/Windows**
+
 ```sh
 # todo
 ```
 
+**Command Line**
 
-**Command**
+Run project with docker-compose
+
+```sh
+docker-compose -f dev.yml up --build
+```
 
 Run project without build
+
 ```sh
 go run ./cmd/server [command] --[flag-name]=[flag-value]
 ```
 
 Build using `make` command
+
 ```sh
 # Build single binary with specify os
 make build[-mac|win|linux]
@@ -75,16 +86,18 @@ make run
 ```
 
 Build with docker
+
 ```sh
 docker-compose build # build docker image
 docker-compose up # run on docker
-# or 
+# or
 docker-compose up --build # build and run
 docker push [image-name] # public docker image to registry
 ```
 
 
-### Configuration
+## Configuration
+
 [Viper](https://github.com/spf13/viper#why-viper) uses the following precedence order. Each item takes precedence over the item below it:
 
 - explicit call to Set

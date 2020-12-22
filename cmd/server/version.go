@@ -1,10 +1,11 @@
 package main
 
-import "github.com/spf13/cobra"
+import (
+	"fmt"
+	"runtime"
 
-import "fmt"
-
-import "runtime"
+	"github.com/spf13/cobra"
+)
 
 // GitCommit inject by -ldflags
 // GIT_COMMIT=git rev-list -1 HEAD && go build -ldflags "-X main.GitCommit=$GIT_COMMIT"

@@ -3,21 +3,13 @@ package v1
 import (
 	"go-example/internal/models"
 	"go-example/internal/services"
+	"go-example/log"
 	"net/http"
-	"os"
 	"reflect"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
-	"github.com/sirupsen/logrus"
 )
-
-var log = logrus.New()
-
-func init() {
-	log.Out = os.Stdout
-	log.Debug("Init users")
-}
 
 // NewUserAPI create userService
 func NewUserAPI(db *gorm.DB) UserAPI {
@@ -44,6 +36,7 @@ func (p userAPI) GetAllUser(c *gin.Context) {
 // GetUser return only one User
 func (p userAPI) GetUser(c *gin.Context) {
 	username := c.Param("name")
+	log.Debug("GetUser:", username)
 	user := p.userService.GetUser(username)
 	if reflect.DeepEqual(*user, models.User{}) {
 		c.Status(http.StatusNotFound)

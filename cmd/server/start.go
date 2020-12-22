@@ -4,6 +4,7 @@ import (
 	"fmt"
 	v1 "go-example/internal/api/v1"
 	"go-example/internal/config"
+	"go-example/internal/models"
 	"log"
 	"strings"
 
@@ -12,8 +13,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
-
 	"github.com/spf13/cobra"
 )
 
@@ -61,6 +60,7 @@ func startServer(cmd *cobra.Command, agrs []string) {
 		panic(fmt.Errorf("Failed to connect database: %w", err))
 	}
 	defer db.Close()
+	go models.AutoMigrate(db)
 	router := gin.Default()
 	pprof.Register(router, "monitor/pprof")
 	apiV1Router := router.Group("/api/v1")

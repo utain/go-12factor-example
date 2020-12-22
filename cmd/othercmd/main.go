@@ -1,7 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"go-example/log"
+)
 
 func main() {
-	fmt.Println("The Example Commandline")
+	log.Info("The Example Commandline")
 }
