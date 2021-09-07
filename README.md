@@ -60,10 +60,10 @@ brew install mingw-w64
 
 **Command Line**
 
-Run project with docker-compose
+Run project with docker compose
 
 ```sh
-docker-compose -f dev.yml up --build
+docker compose -f dev.yml up --build
 ```
 
 Run project without build
@@ -88,10 +88,10 @@ make run
 Build with docker
 
 ```sh
-docker-compose build # build docker image
-docker-compose up # run on docker
+docker compose build # build docker image
+docker compose up # run on docker
 # or
-docker-compose up --build # build and run
+docker compose up --build # build and run
 docker push [image-name] # public docker image to registry
 ```
 

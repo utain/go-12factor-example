@@ -31,7 +31,7 @@ func InitData(db *gorm.DB) {
 			"height": "32m",
 		},
 		Props: []ProductProps{
-			ProductProps{Model: Model{ID: "1"}, Key: "Name", Value: "MacDev"},
+			{Model: Model{ID: "1"}, Key: "Name", Value: "MacDev"},
 		}})
 	time.Sleep(time.Second)
 
