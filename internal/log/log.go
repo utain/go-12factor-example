@@ -16,7 +16,7 @@ var format = logging.MustStringFormatter(
 // GetLogger new logger
 func GetLogger(name string) *logging.Logger {
 	if name == "" {
-		name = "CENTER"
+		name = "server"
 	}
 	stdoutBE := logging.NewLogBackend(os.Stdout, "", 0)
 	beFormat := logging.NewBackendFormatter(stdoutBE, format)
@@ -26,7 +26,7 @@ func GetLogger(name string) *logging.Logger {
 }
 
 // Default logger
-var Default = GetLogger("playme")
+var Default = GetLogger("server")
 
 // Error logs a message using ERROR as log level.
 var Error = Default.Error

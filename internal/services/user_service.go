@@ -1,7 +1,9 @@
 package services
 
 import (
-	"go-example/internal/models"
+	"errors"
+	"go-example/internal/entities"
+	"go-example/internal/log"
 
 	"github.com/jinzhu/gorm"
 )
@@ -13,8 +15,8 @@ func NewUserService(db *gorm.DB) UserService {
 
 //UserService interface
 type UserService interface {
-	GetAllUser(offset int, limit int, search string) *[]models.User
-	GetUser(name string) *models.User
+	GetAllUser(users *[]entities.User, offset int, limit int, search string) error
+	GetUser(user *entities.User, id string) error
 }
 
 // userService is a service private
@@ -23,15 +25,22 @@ type userService struct {
 }
 
 // GetAllUser return all User
-func (p userService) GetAllUser(offset int, limit int, search string) *[]models.User {
-	var users []models.User
-	p.db.Find(&users)
-	return &users
+func (p userService) GetAllUser(users *[]entities.User, offset int, limit int, search string) error {
+	if err := p.db.Find(&users).Error; err != nil {
+		log.Error("GetAllUser", err)
+		return nil
+	}
+	return nil
 }
 
 // GetUser return only one User
-func (p userService) GetUser(name string) *models.User {
-	var user models.User
-	p.db.First(&user, &models.User{Username: name})
-	return &user
+func (p userService) GetUser(user *entities.User, id string) error {
+	if err := p.db.First(&user, &entities.User{Model: entities.Model{ID: id}}).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return errors.New("user not found")
+		}
+		log.Error("GetUser", err)
+		return errors.New("unknown error")
+	}
+	return nil
 }

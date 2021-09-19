@@ -2,8 +2,8 @@ package main
 
 import (
 	"go-example/internal/config"
-	"go-example/internal/models"
-	"go-example/log"
+	"go-example/internal/entities"
+	"go-example/internal/log"
 
 	// auto connect to sql
 
@@ -15,27 +15,26 @@ import (
 var (
 	migrateCMD = &cobra.Command{
 		Use:   "migrate",
-		Short: "automated migrate data",
-		Long:  `automated migrate database schema and initial data`,
+		Short: "migrate db schema and seed data",
 		Run:   migrateCMDRunner,
 	}
-	initialData bool
+	seedData bool
 )
 
 func init() {
 	rootCmd.AddCommand(migrateCMD)
-	migrateCMD.PersistentFlags().BoolVarP(&initialData, "data", "d", false, "initial data also (default: false)")
+	migrateCMD.PersistentFlags().BoolVarP(&seedData, "seed", "s", false, "seed data (default: false)")
 }
 
 func migrateCMDRunner(cmd *cobra.Command, agrs []string) {
 	log.Info("Start migrate")
-	db, err := gorm.Open("postgres", config.AllConf().Database.URL)
+	db, err := gorm.Open("postgres", config.Parse().Database.URL)
 	if err != nil {
-		log.Fatalf("Failed to connect database[%v]: %w", config.AllConf().Database.URL, err)
+		log.Fatalf("Failed to connect database[%v]: %w", config.Parse().Database.URL, err)
 	}
 	defer db.Close()
-	models.AutoMigrate(db)
-	if initialData {
-		models.InitData(db)
+	entities.AutoMigrate(db)
+	if seedData {
+		entities.SeedData(db)
 	}
 }

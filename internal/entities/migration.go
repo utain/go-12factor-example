@@ -1,7 +1,7 @@
-package models
+package entities
 
 import (
-	"go-example/log"
+	"go-example/internal/log"
 	"time"
 
 	"github.com/jinzhu/gorm"
@@ -13,11 +13,10 @@ func AutoMigrate(db *gorm.DB) {
 	if err := db.AutoMigrate(&User{}, &Product{}, &ProductProps{}).Error; err != nil {
 		log.Debugf("Can't automigrate schema %v", err)
 	}
-	InitData(db)
 }
 
-//InitData using for initial data when first time install
-func InitData(db *gorm.DB) {
+//SeedData using for initial data when first time install
+func SeedData(db *gorm.DB) {
 	db.Create(&User{
 		Model:     Model{ID: "1"},
 		Username:  "Example",

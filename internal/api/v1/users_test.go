@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	v1 "go-example/internal/api/v1"
-	"go-example/internal/models"
 	"net/http"
 	"net/http/httptest"
 	"regexp"
@@ -23,7 +22,6 @@ type UserAPITestSuite struct {
 	mock sqlmock.Sqlmock
 
 	api    v1.UserAPI
-	person *models.User
 	router *gin.Engine
 }
 
@@ -42,33 +40,37 @@ func (s *UserAPITestSuite) SetupSuite() {
 	s.DB.LogMode(true)
 
 	s.api = v1.NewUserAPI(s.DB)
-	s.mock.ExpectQuery(regexp.QuoteMeta(
-		`SELECT * FROM "users"  WHERE "users"."deleted_at" IS NULL AND (("users"."username" = $1)) ORDER BY "users"."id" ASC LIMIT 1`)).
-		WithArgs("utain").
+	s.mock.ExpectQuery(
+		regexp.QuoteMeta(`SELECT * FROM "users"  WHERE "users"."deleted_at" IS NULL AND (("users"."id" = $1)) ORDER BY "users"."id" ASC LIMIT 1`)).
+		WithArgs("1").
 		WillReturnRows(sqlmock.NewRows([]string{"id", "username"}).
 			AddRow("1", "utain"))
+
 	router := gin.Default()
-	router.GET("/api/v1/users/:name", s.api.GetUser)
+	router.GET("/api/v1/users/:id", s.api.GetUser)
 	router.GET("/api/v1/users", s.api.GetAllUser)
 	s.router = router
 }
-func (s *UserAPITestSuite) TestHTTPGetUsers() {
-	res := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/api/v1/users/utain", nil)
-	s.router.ServeHTTP(res, req)
-	s.Equal(http.StatusOK, res.Code, "Status must be 200:OK")
-}
-func (s *UserAPITestSuite) TestHTTPGetUsersWithEmptyData() {
-	res := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/api/v1/users/otheruser", nil)
-	s.router.ServeHTTP(res, req)
-	s.Equal(http.StatusNotFound, res.Code, "Status must be 404:NotFound")
-}
+
 func (s *UserAPITestSuite) TestHTTPGetAllUsers() {
 	res := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/api/v1/users", nil)
 	s.router.ServeHTTP(res, req)
 	s.Equal(http.StatusOK, res.Code, "Status must be 200:OK")
+}
+
+func (s *UserAPITestSuite) TestHTTPGetUsers() {
+	res := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/api/v1/users/1", nil)
+	s.router.ServeHTTP(res, req)
+	s.Equal(http.StatusOK, res.Code, "Status must be 200:OK")
+}
+
+func (s *UserAPITestSuite) TestHTTPGetUsersWithEmptyData() {
+	res := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/api/v1/users/x", nil)
+	s.router.ServeHTTP(res, req)
+	s.Equal(http.StatusNotFound, res.Code, "Status must be 404:NotFound")
 }
 
 func TestUserAPITestSuite(t *testing.T) {

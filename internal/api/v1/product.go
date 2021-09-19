@@ -1,12 +1,10 @@
 package v1
 
 import (
-	"go-example/internal/models"
+	"go-example/internal/dto"
+	"go-example/internal/entities"
 	"go-example/internal/services"
 	"net/http"
-	"reflect"
-
-	"go-example/log"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -20,33 +18,30 @@ type ProductAPI interface {
 }
 
 type productAPI struct {
-	productService services.ProductService
+	service services.ProductService
 }
 
 // NewProductAPI get product service instance
 func NewProductAPI(db *gorm.DB) ProductAPI {
-	return &productAPI{productService: services.NewProductService(db)}
+	return &productAPI{service: services.NewProductService(db)}
 }
 
 func (p productAPI) FindAll(ctx *gin.Context) {
-	products := p.productService.FindAll(0, 10, "")
-	ctx.JSON(http.StatusOK, products)
+	var products []entities.Product
+	p.service.FindAll(&products, 0, 10, "")
+	ctx.JSON(http.StatusOK, dto.DataReply{Data: products})
 }
 func (p productAPI) GetProduct(ctx *gin.Context) {
-	log.Error("Get Product Example Log")
-	product := p.productService.GetProduct(ctx.Param("id"))
-	if reflect.DeepEqual(models.Product{}, *product) {
-		ctx.Status(http.StatusNotFound)
+	var product entities.Product
+	if err := p.service.GetProduct(&product, ctx.Param("id")); err != nil {
+		ctx.JSON(http.StatusNotFound, dto.ReplyError(err.Error()))
 		return
 	}
-	ctx.JSON(http.StatusOK, product)
+	ctx.JSON(http.StatusOK, dto.DataReply{Data: product})
 }
 func (p productAPI) DeleteProduct(ctx *gin.Context) {
-	err := p.productService.DeleteProduct(ctx.Param("id"))
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"error": err.Error(),
-		})
+	if err := p.service.DeleteProduct(ctx.Param("id")); err != nil {
+		ctx.JSON(http.StatusInternalServerError, dto.ReplyError(err.Error()))
 		return
 	}
 	ctx.Status(http.StatusAccepted)

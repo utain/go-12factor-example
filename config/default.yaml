@@ -1,6 +1,6 @@
 server:
   port: 5000
 database:
-  url: postgresql://example:P@55w0rd@postgres:5432/example?sslmode=disable
-logging:
-  path: gin.log
+  url: postgresql://example:P@55w0rd@localhost:5432/example?sslmode=disable
+  pool:
+    max: 50

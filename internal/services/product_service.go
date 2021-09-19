@@ -1,16 +1,17 @@
 package services
 
 import (
-	"go-example/internal/models"
-	"go-example/log"
+	"errors"
+	"go-example/internal/entities"
+	"go-example/internal/log"
 
 	"github.com/jinzhu/gorm"
 )
 
 //ProductService api controller of produces
 type ProductService interface {
-	FindAll(offset int, limit int, search string) *[]models.Product
-	GetProduct(id string) *models.Product
+	FindAll(products *[]entities.Product, offset int, limit int, search string) error
+	GetProduct(product *entities.Product, id string) error
 	DeleteProduct(id string) error
 }
 
@@ -23,26 +24,28 @@ func NewProductService(db *gorm.DB) ProductService {
 	return &productService{db}
 }
 
-func (p productService) FindAll(offset int, limit int, search string) *[]models.Product {
-	var products []models.Product
-	p.db.Find(&products)
-	return &products
+func (p productService) FindAll(products *[]entities.Product, offset int, limit int, search string) error {
+	// do stuff
+	return p.db.Find(&products).Error
 }
 
-func (p productService) GetProduct(id string) *models.Product {
-	var product models.Product
-	p.db.Preload("Props").First(&product, models.Product{Model: models.Model{ID: id}})
-	return &product
+func (p productService) GetProduct(product *entities.Product, id string) error {
+	// do stuff
+	if err := p.db.Preload("Props").First(&product, entities.Product{Model: entities.Model{ID: id}}).Error; err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
+		return errors.New("product not found")
+	}
+	return nil
 }
 
 func (p productService) DeleteProduct(id string) error {
-	log.Debug("DeleteProduct with ID=", id)
+	log.Info("Delete product id=", id)
 	tx := p.db.Begin()
-	rs := tx.Delete(&models.Product{Model: models.Model{ID: id}}).Where("id=?", id)
+	rs := tx.Delete(&entities.Product{Model: entities.Model{ID: id}}).Where("id=?", id)
 	if rs.Error != nil {
-		log.Error("[Error]:", rs.Error)
+		log.Error("fail to delete product:", rs.Error)
 		tx.Rollback()
+		return errors.New("can't delete product")
 	}
 	tx.Commit()
-	return rs.Error
+	return nil
 }

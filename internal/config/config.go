@@ -2,13 +2,13 @@ package config
 
 import (
 	"encoding/json"
-	"go-example/log"
+	"go-example/internal/log"
 
 	"github.com/spf13/viper"
 )
 
-var defaultViper = viper.New()
-var defaultConfig Config
+var viperInstance = viper.New()
+var Default Config
 
 func init() {
 	log.Debug("INIT CONFIG")
@@ -16,12 +16,12 @@ func init() {
 
 // Config struct
 type Config struct {
-	Port     int
+	Port     uint
 	Database struct {
-		URL string
-	}
-	Logging struct {
-		Path string
+		URL  string
+		Pool struct {
+			Max uint
+		}
 	}
 }
 
@@ -30,17 +30,15 @@ func (d Config) String() string {
 	return string(b)
 }
 
-// AllConf get all config support in app
-func AllConf() Config {
-	err := defaultViper.Unmarshal(&defaultConfig)
-	if err != nil {
-		log.Fatal("Fail to read configuration")
+// Parse get all config support in app
+func Parse() Config {
+	if err := viperInstance.Unmarshal(&Default); err != nil {
+		log.Fatal("Fail to read configuration", err)
 	}
-	log.Debug("defaultConfig:", defaultConfig)
-	return defaultConfig
+	return Default
 }
 
 // Viper instance
 func Viper() *viper.Viper {
-	return defaultViper
+	return viperInstance
 }

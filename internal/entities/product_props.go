@@ -1,4 +1,4 @@
-package models
+package entities
 
 // ProductProps model
 type ProductProps struct {
