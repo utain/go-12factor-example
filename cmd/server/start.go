@@ -5,6 +5,7 @@ import (
 	v1 "go-example/internal/api/v1"
 	"go-example/internal/config"
 	"go-example/internal/entities"
+	"go-example/internal/errors"
 	"go-example/internal/log"
 	"strings"
 
@@ -67,6 +68,7 @@ func startServer(cmd *cobra.Command, agrs []string) {
 	}
 
 	router := gin.New()
+	router.Use(errors.GinError())
 	router.Use(gin.Recovery())
 	if enablePprof {
 		pprof.Register(router, "monitor/pprof")

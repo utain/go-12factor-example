@@ -3,6 +3,7 @@ package v1
 import (
 	"go-example/internal/dto"
 	"go-example/internal/entities"
+	"go-example/internal/errors"
 	"go-example/internal/log"
 	"go-example/internal/services"
 	"net/http"
@@ -31,7 +32,7 @@ type userAPI struct {
 func (p userAPI) GetAllUser(ctx *gin.Context) {
 	users := new([]entities.User)
 	if err := p.service.GetAllUser(users, 0, -1, ""); err != nil {
-		ctx.JSON(http.StatusNotFound, dto.ReplyError(err.Error()))
+		ctx.Error(errors.NewError(http.StatusBadRequest, err.Error()))
 		return
 	}
 	ctx.JSON(http.StatusOK, dto.DataReply{Data: users})
@@ -43,7 +44,7 @@ func (p userAPI) GetUser(ctx *gin.Context) {
 	log.Debug("User id:", id)
 	user := new(entities.User)
 	if err := p.service.GetUser(user, id); err != nil {
-		ctx.JSON(http.StatusNotFound, dto.ReplyError(err.Error()))
+		ctx.Error(errors.NewError(http.StatusBadRequest, err.Error()))
 		return
 	}
 	ctx.JSON(http.StatusOK, dto.DataReply{Data: user})
