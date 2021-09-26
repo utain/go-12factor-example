@@ -17,7 +17,7 @@ func GinError() gin.HandlerFunc {
 			err := errors[0].Err
 			if err, ok := err.(*Error); ok {
 				log.Error("[AppError]:", err)
-				c.AbortWithStatusJSON(err.Code, dto.ReplyError(err.Message))
+				c.AbortWithStatusJSON(err.Code, err.ToReply())
 				return
 			}
 			log.Error("[AppErrorUnhandle]:", err)
