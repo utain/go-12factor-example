@@ -4,14 +4,14 @@ import (
 	"go-example/internal/log"
 	"time"
 
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 //AutoMigrate for migrate database schema
 func AutoMigrate(db *gorm.DB) {
-	log.Debug("Migrating User model")
+	log.Info("Migrating model")
 	if err := db.AutoMigrate(&User{}, &Product{}, &ProductProps{}).Error; err != nil {
-		log.Debugf("Can't automigrate schema %v", err)
+		log.Errorf("Can't automigrate schema %v", err)
 	}
 }
 

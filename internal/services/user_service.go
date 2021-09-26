@@ -5,7 +5,7 @@ import (
 	"go-example/internal/entities"
 	"go-example/internal/log"
 
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 // NewUserService create userService

@@ -8,7 +8,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 //ProductAPI api controller of produces

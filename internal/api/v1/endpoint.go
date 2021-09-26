@@ -2,7 +2,7 @@ package v1
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 // RegisterRouterAPIV1 group for api/v1/*

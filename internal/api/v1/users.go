@@ -9,7 +9,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 // NewUserAPI create userService
@@ -29,7 +29,7 @@ type userAPI struct {
 }
 
 // GetAllUser return all User
-func (p userAPI) GetAllUser(ctx *gin.Context) {
+func (p *userAPI) GetAllUser(ctx *gin.Context) {
 	users := new([]entities.User)
 	if err := p.service.GetAllUser(users, 0, -1, ""); err != nil {
 		ctx.Error(errors.NewError(http.StatusBadRequest, err.Error()))
@@ -39,12 +39,12 @@ func (p userAPI) GetAllUser(ctx *gin.Context) {
 }
 
 // GetUser return only one User
-func (p userAPI) GetUser(ctx *gin.Context) {
+func (p *userAPI) GetUser(ctx *gin.Context) {
 	id := ctx.Param("id")
 	log.Debug("User id:", id)
 	user := new(entities.User)
 	if err := p.service.GetUser(user, id); err != nil {
-		ctx.Error(errors.NewError(http.StatusBadRequest, err.Error()))
+		ctx.Error(errors.NewError(http.StatusNotFound, err.Error()))
 		return
 	}
 	ctx.JSON(http.StatusOK, dto.DataReply{Data: user})

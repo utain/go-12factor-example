@@ -9,9 +9,10 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
-	"github.com/jinzhu/gorm"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 type UserServiceTestSuite struct {
@@ -30,17 +31,19 @@ func (s *UserServiceTestSuite) SetupSuite() {
 
 	db, s.mock, err = sqlmock.New()
 	require.NoError(s.T(), err)
-
-	s.DB, err = gorm.Open("postgres", db)
+	s.DB, err = gorm.Open(postgres.New(postgres.Config{
+		Conn: db,
+	}))
+	require.NoError(s.T(), err)
+	entities.AutoMigrate(s.DB)
 	require.NoError(s.T(), err)
 
-	s.DB.LogMode(true)
 	s.service = services.NewUserService(s.DB)
 }
 
 func (s *UserServiceTestSuite) TestServiceGetUser() {
 	s.mock.ExpectQuery(regexp.QuoteMeta(
-		`SELECT * FROM "users"  WHERE "users"."deleted_at" IS NULL AND (("users"."id" = $1)) ORDER BY "users"."id" ASC LIMIT 1`)).
+		`SELECT * FROM "users" WHERE "users"."id" = $1 AND "users"."deleted_at" IS NULL ORDER BY "users"."id" LIMIT 1`)).
 		WithArgs("1").
 		WillReturnRows(sqlmock.NewRows([]string{"id", "username"}).
 			AddRow("1", "utain"))

@@ -4,17 +4,14 @@ go 1.17
 
 require (
 	github.com/DATA-DOG/go-sqlmock v1.5.0
-	github.com/denisenkom/go-mssqldb v0.10.0 // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/gin-contrib/pprof v1.3.0
 	github.com/gin-gonic/gin v1.7.4
 	github.com/go-playground/validator/v10 v10.9.0 // indirect
 	github.com/google/go-cmp v0.5.6 // indirect
-	github.com/jinzhu/gorm v1.9.16
 	github.com/jinzhu/now v1.1.2 // indirect
 	github.com/lib/pq v1.10.3 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
-	github.com/mattn/go-sqlite3 v1.14.8 // indirect
 	github.com/op/go-logging v0.0.0-20160315200505-970db520ece7
 	github.com/pelletier/go-toml v1.9.4 // indirect
 	github.com/spf13/cast v1.4.1 // indirect
@@ -61,11 +58,21 @@ require (
 require (
 	github.com/caarlos0/env/v6 v6.7.1
 	github.com/joho/godotenv v1.3.0
-	google.golang.org/grpc v1.40.0
-	google.golang.org/protobuf v1.27.1
 )
 
 require (
-	golang.org/x/net v0.0.0-20210917221730-978cfadd31cf // indirect
-	google.golang.org/genproto v0.0.0-20210917145530-b395a37504d4 // indirect
+	gorm.io/driver/postgres v1.1.1
+	gorm.io/gorm v1.21.15
+)
+
+require (
+	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
+	github.com/jackc/pgconn v1.10.0 // indirect
+	github.com/jackc/pgio v1.0.0 // indirect
+	github.com/jackc/pgpassfile v1.0.0 // indirect
+	github.com/jackc/pgproto3/v2 v2.1.1 // indirect
+	github.com/jackc/pgservicefile v0.0.0-20200714003250-2b9c44734f2b // indirect
+	github.com/jackc/pgtype v1.8.1 // indirect
+	github.com/jackc/pgx/v4 v4.13.0 // indirect
+	google.golang.org/protobuf v1.27.1 // indirect
 )

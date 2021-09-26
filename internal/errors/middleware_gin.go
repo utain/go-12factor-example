@@ -12,15 +12,14 @@ import (
 func GinError() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Next()
-		errors := c.Errors.ByType(gin.ErrorTypeAny)
-		if len(errors) > 0 {
+		if errors := c.Errors.ByType(gin.ErrorTypeAny); len(errors) > 0 {
 			err := errors[0].Err
 			if err, ok := err.(*Error); ok {
 				log.Error("[AppError]:", err)
 				c.AbortWithStatusJSON(err.Code, err.ToReply())
 				return
 			}
-			log.Error("[AppErrorUnhandle]:", err)
+			log.Error("[UnhandlerError]:", err)
 			c.AbortWithStatusJSON(http.StatusInternalServerError, dto.ReplyError("Unknown error"))
 			return
 		}

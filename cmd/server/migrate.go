@@ -7,9 +7,9 @@ import (
 
 	// auto connect to sql
 
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/spf13/cobra"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 var (
@@ -28,11 +28,15 @@ func init() {
 
 func migrateCMDRunner(cmd *cobra.Command, agrs []string) {
 	log.Info("Start migrate")
-	db, err := gorm.Open("postgres", config.Parse().Database.URL)
+	db, err := gorm.Open(postgres.Open(config.Default.Database.URL))
 	if err != nil {
 		log.Fatalf("Failed to connect database[%v]: %w", config.Parse().Database.URL, err)
 	}
-	defer db.Close()
+	defer func() {
+		if dbSql, err := db.DB(); err != nil {
+			dbSql.Close()
+		}
+	}()
 	entities.AutoMigrate(db)
 	if seedData {
 		entities.SeedData(db)

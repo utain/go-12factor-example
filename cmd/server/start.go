@@ -13,9 +13,9 @@ import (
 
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/spf13/cobra"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 var (
@@ -56,12 +56,19 @@ func initConfig() {
 
 func startServer(cmd *cobra.Command, agrs []string) {
 	log.Info("Start http-server")
-	db, err := gorm.Open("postgres", config.Default.Database.URL)
+	db, err := gorm.Open(postgres.Open(config.Default.Database.URL))
 	if err != nil {
 		log.Fatal("Failed to connect database: ", err)
 	}
-	db.DB().SetMaxOpenConns(int(config.Default.Database.Pool.Max))
-	defer db.Close()
+	sqlDB, err := db.DB()
+	if err != nil {
+		log.Fatal("Can't connect database")
+	}
+	sqlDB.SetMaxOpenConns(int(config.Default.Database.Pool.Max))
+	defer func() {
+		sqlDB.Close()
+		log.Info("Closed db connection")
+	}()
 	go entities.AutoMigrate(db)
 	if seedData {
 		go entities.SeedData(db)

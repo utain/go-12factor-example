@@ -8,7 +8,7 @@ Trying to implement follow [The Twelve Factor App](https://12factor.net/)
 2. Configuration: github.com/spf13/viper
 3. Testing: github.com/stretchr/testify
 4. Mocking DB: github.com/DATA-DOG/go-sqlmock
-5. ORM: github.com/jinzhu/gorm
+5. ORM: gorm.io/gorm
 6. Logging: github.com/op/go-logging
 7. HTTP Server: github.com/gin-gonic/gin
 
@@ -24,9 +24,12 @@ Trying to implement follow [The Twelve Factor App](https://12factor.net/)
 │   ├── othercmd # example other command line app
 │   └── server   # start reading code from here
 ├── internal
-│   ├── api
+│   ├── api/v1
 │   ├── config
-│   ├── models
+|   |-- dto
+│   ├── entities
+|   |-- errors
+|   |-- log
 │   ├── services
 │   └── utils
 ├── config
