@@ -1,8 +1,6 @@
 package main
 
-import (
-	"go-example/log"
-)
+import "go-example/internal/log"
 
 func main() {
 	log.Info("The Example Commandline")
