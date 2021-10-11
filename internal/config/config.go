@@ -16,7 +16,10 @@ func init() {
 
 // Config struct
 type Config struct {
-	Port     uint
+	Server struct {
+		Port uint
+		Host string
+	}
 	Database struct {
 		URL  string
 		Pool struct {

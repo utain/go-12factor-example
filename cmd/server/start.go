@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"go-example/docs"
 	v1 "go-example/internal/api/v1"
 	"go-example/internal/config"
 	"go-example/internal/entities"
@@ -9,11 +10,11 @@ import (
 	"go-example/internal/log"
 	"strings"
 
-	// auto connect to sql
-
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
+	swagger "github.com/swaggo/gin-swagger"
+	"github.com/swaggo/gin-swagger/swaggerFiles"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -34,7 +35,6 @@ func init() {
 	rootCmd.AddCommand(startCmd)
 	rootCmd.PersistentFlags().StringVarP(&configPath, "config", "c", "", "config file (default is $PWD/config/default.yaml)")
 	startCmd.PersistentFlags().Int("port", 5000, "Port to run Application server on")
-	startCmd.PersistentFlags().BoolVarP(&seedData, "seed", "s", false, "seed data (default: false)")
 	startCmd.PersistentFlags().BoolVarP(&enablePprof, "pprof", "p", false, "enable pprof mode (default: false)")
 	config.Viper().BindPFlag("port", startCmd.PersistentFlags().Lookup("port"))
 }
@@ -70,10 +70,7 @@ func startServer(cmd *cobra.Command, agrs []string) {
 		log.Info("Closed db connection")
 	}()
 	go entities.AutoMigrate(db)
-	if seedData {
-		go entities.SeedData(db)
-	}
-
+	setupDoc()
 	router := gin.New()
 	router.Use(errors.GinError())
 	router.Use(gin.Recovery())
@@ -82,6 +79,18 @@ func startServer(cmd *cobra.Command, agrs []string) {
 	}
 	apiV1Router := router.Group("/api/v1")
 	v1.RegisterRouterAPIV1(apiV1Router, db)
+	// use swagger middleware to serve the API docs
+	router.GET("/doc/*any", swagger.WrapHandler(swaggerFiles.Handler))
 
-	router.Run(fmt.Sprintf(":%d", config.Default.Port))
+	router.Run(fmt.Sprintf("%s:%d", config.Default.Server.Host, config.Default.Server.Port))
+}
+
+func setupDoc() {
+	// programmatically set swagger info
+	docs.SwaggerInfo.Title = "Go Example API"
+	docs.SwaggerInfo.Description = "This is example golang server."
+	docs.SwaggerInfo.Version = "1.0"
+	docs.SwaggerInfo.Host = fmt.Sprintf("%s:%d", config.Default.Server.Host, config.Default.Server.Port)
+	docs.SwaggerInfo.BasePath = "/api/v1"
+	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 }

@@ -5,8 +5,6 @@ import (
 	"go-example/internal/entities"
 	"go-example/internal/log"
 
-	// auto connect to sql
-
 	"github.com/spf13/cobra"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -18,12 +16,10 @@ var (
 		Short: "migrate db schema and seed data",
 		Run:   migrateCMDRunner,
 	}
-	seedData bool
 )
 
 func init() {
 	rootCmd.AddCommand(migrateCMD)
-	migrateCMD.PersistentFlags().BoolVarP(&seedData, "seed", "s", false, "seed data (default: false)")
 }
 
 func migrateCMDRunner(cmd *cobra.Command, agrs []string) {
@@ -38,7 +34,4 @@ func migrateCMDRunner(cmd *cobra.Command, agrs []string) {
 		}
 	}()
 	entities.AutoMigrate(db)
-	if seedData {
-		entities.SeedData(db)
-	}
 }

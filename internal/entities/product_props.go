@@ -6,4 +6,4 @@ type ProductProps struct {
 	Key        string `json:"key"`
 	Value      string `json:"value"`
 	ProductRef string `json:"product_ref"`
-}
+} //@name ProductProps

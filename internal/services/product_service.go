@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"go-example/internal/dto"
 	"go-example/internal/entities"
 	"go-example/internal/log"
 
@@ -10,8 +11,8 @@ import (
 
 //ProductService api controller of produces
 type ProductService interface {
-	FindAll(products *[]entities.Product, offset int, limit int, search string) error
-	GetProduct(product *entities.Product, id string) error
+	FindAll(pageable dto.Pageable) (*[]entities.Product, error)
+	GetProduct(id string) (*entities.Product, error)
 	DeleteProduct(id string) error
 }
 
@@ -24,17 +25,20 @@ func NewProductService(db *gorm.DB) ProductService {
 	return &productService{db}
 }
 
-func (p productService) FindAll(products *[]entities.Product, offset int, limit int, search string) error {
+func (p productService) FindAll(pageable dto.Pageable) (*[]entities.Product, error) {
 	// do stuff
-	return p.db.Find(&products).Error
+	products := new([]entities.Product)
+	p.db.Find(products)
+	return products, nil
 }
 
-func (p productService) GetProduct(product *entities.Product, id string) error {
+func (p productService) GetProduct(id string) (*entities.Product, error) {
 	// do stuff
+	product := &entities.Product{}
 	if err := p.db.Preload("Props").First(&product, entities.Product{Model: entities.Model{ID: id}}).Error; err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
-		return errors.New("product not found")
+		return nil, errors.New("product not found")
 	}
-	return nil
+	return product, nil
 }
 
 func (p productService) DeleteProduct(id string) error {

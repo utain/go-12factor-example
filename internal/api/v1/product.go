@@ -2,7 +2,6 @@ package v1
 
 import (
 	"go-example/internal/dto"
-	"go-example/internal/entities"
 	"go-example/internal/errors"
 	"go-example/internal/services"
 	"net/http"
@@ -28,18 +27,19 @@ func NewProductAPI(db *gorm.DB) ProductAPI {
 }
 
 func (p productAPI) FindAll(ctx *gin.Context) {
-	var products []entities.Product
-	p.service.FindAll(&products, 0, 10, "")
+	products, _ := p.service.FindAll(dto.Pageable{})
 	ctx.JSON(http.StatusOK, dto.DataReply{Data: products})
 }
+
 func (p productAPI) GetProduct(ctx *gin.Context) {
-	var product entities.Product
-	if err := p.service.GetProduct(&product, ctx.Param("id")); err != nil {
+	product, err := p.service.GetProduct(ctx.Param("id"))
+	if err != nil {
 		ctx.Error(errors.NewError(http.StatusNotFound, err.Error()))
 		return
 	}
 	ctx.JSON(http.StatusOK, dto.DataReply{Data: product})
 }
+
 func (p productAPI) DeleteProduct(ctx *gin.Context) {
 	if err := p.service.DeleteProduct(ctx.Param("id")); err != nil {
 		ctx.Error(errors.NewError(http.StatusBadRequest, err.Error()))

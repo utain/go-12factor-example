@@ -2,9 +2,7 @@ package v1
 
 import (
 	"go-example/internal/dto"
-	"go-example/internal/entities"
 	"go-example/internal/errors"
-	"go-example/internal/log"
 	"go-example/internal/services"
 	"net/http"
 
@@ -28,10 +26,19 @@ type userAPI struct {
 	service services.UserService
 }
 
-// GetAllUser return all User
+// GetAllUser godoc
+// @Title GetAllUser
+// @Summary Get all users information
+// @Description List users in server
+// @ID get-all-users
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} dto.DataReply{data=[]entities.User}
+// @Failure 500 {object} dto.ErrorReply "Unknown error"
+// @Router /users [get]
 func (p *userAPI) GetAllUser(ctx *gin.Context) {
-	users := new([]entities.User)
-	if err := p.service.GetAllUser(users, 0, -1, ""); err != nil {
+	users, err := p.service.GetAllUser(dto.Pageable{})
+	if err != nil {
 		ctx.Error(errors.NewError(http.StatusBadRequest, err.Error()))
 		return
 	}
@@ -41,9 +48,8 @@ func (p *userAPI) GetAllUser(ctx *gin.Context) {
 // GetUser return only one User
 func (p *userAPI) GetUser(ctx *gin.Context) {
 	id := ctx.Param("id")
-	log.Debug("User id:", id)
-	user := new(entities.User)
-	if err := p.service.GetUser(user, id); err != nil {
+	user, err := p.service.GetUser(id)
+	if err != nil {
 		ctx.Error(errors.NewError(http.StatusNotFound, err.Error()))
 		return
 	}

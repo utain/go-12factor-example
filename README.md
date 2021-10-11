@@ -11,6 +11,7 @@ Trying to implement follow [The Twelve Factor App](https://12factor.net/)
 5. ORM: gorm.io/gorm
 6. Logging: github.com/op/go-logging
 7. HTTP Server: github.com/gin-gonic/gin
+8. API Document: github.com/swaggo/swag/cmd/swag
 
 ## Project structure
 
@@ -34,6 +35,7 @@ Trying to implement follow [The Twelve Factor App](https://12factor.net/)
 │   └── utils
 ├── config
 │   └── default.yaml
+├── docs
 ├── dist
 │   ├── drawin
 │   ├── linux
@@ -55,12 +57,6 @@ brew install FiloSottile/musl-cross/musl-cross
 brew install mingw-w64
 ```
 
-**Linux/Windows**
-
-```sh
-# todo
-```
-
 **Command Line**
 
 Run project with docker compose
@@ -73,6 +69,13 @@ Run project without build
 
 ```sh
 go run ./cmd/server [command] --[flag-name]=[flag-value]
+```
+
+Generate API Document
+
+```sh
+make doc
+# open url http://localhost:5000/doc/index.html
 ```
 
 Build using `make` command

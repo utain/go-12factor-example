@@ -8,4 +8,4 @@ type User struct {
 	Password  string `json:"password"`
 	Firstname string `json:"firstname"`
 	Lastname  string `json:"lastname"`
-}
+} //@name User

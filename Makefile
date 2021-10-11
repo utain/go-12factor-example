@@ -1,6 +1,6 @@
 # OS
-OSNAME 				    :=
-BINARY_NAME_FILE  :=
+OSNAME						:=
+BINARY_NAME_FILE	:=
 ifeq ($(OS),Windows_NT)
 	OSNAME=windows
 else
@@ -46,6 +46,8 @@ test:
 clean:
 	$(GOCMD) clean ./...
 	rm -rf ./dist/
+doc:
+	$(GOCMD) run github.com/swaggo/swag/cmd/swag@latest init -g cmd/server/start.go
 download:
 	go mod download
 build-all: build-mac build-win build-linux

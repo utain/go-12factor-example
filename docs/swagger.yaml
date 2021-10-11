@@ -1,0 +1,63 @@
+definitions:
+  ErrorMessage:
+    properties:
+      message:
+        type: string
+    type: object
+  ErrorReply:
+    properties:
+      error:
+        $ref: '#/definitions/ErrorMessage'
+    type: object
+  Response:
+    properties:
+      data: {}
+    type: object
+  User:
+    properties:
+      createdAt:
+        type: string
+      email:
+        type: string
+      firstname:
+        type: string
+      id:
+        type: string
+      lastname:
+        type: string
+      password:
+        type: string
+      updatedAt:
+        type: string
+      username:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: List users in server
+      operationId: get-all-users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/User'
+                  type: array
+              type: object
+        "500":
+          description: Unknown error
+          schema:
+            $ref: '#/definitions/ErrorReply'
+      summary: Get all users information
+swagger: "2.0"

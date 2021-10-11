@@ -48,14 +48,14 @@ func (s *UserServiceTestSuite) TestServiceGetUser() {
 		WillReturnRows(sqlmock.NewRows([]string{"id", "username"}).
 			AddRow("1", "utain"))
 
-	user := new(entities.User)
-	s.service.GetUser(user, "1")
+	user, err := s.service.GetUser("1")
+	s.Assert().NoError(err)
 	s.Assert().Contains(user.ID, "1")
 	s.Assert().Contains(user.Username, "utain")
 
-	userX := new(entities.User)
-	err := s.service.GetUser(userX, "x")
-	s.Assert().NotNil(err, "User id=x should not found")
+	userX, err := s.service.GetUser("x")
+	s.Assert().Error(err, "User id=x should not found")
+	s.Assert().Nil(userX)
 }
 
 func TestUserServiceTestSuite(t *testing.T) {
