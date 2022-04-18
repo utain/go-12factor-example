@@ -3,28 +3,60 @@ version: "3.8"
 networks:
   app-network:
 services:
-  server:
-    build: .
-    image: docker.pkg.github.com/utain/go-12factor-example/go-server:latest
-    environment:
-      DATABASE_URL: postgresql://example:P@55w0rd@postgres:5432/example?sslmode=disable
-      DATABASE_HOST: postgres
-      DATABASE_PORT: 5432
+  postgres:
+    image: postgres:13.6-alpine3.15
     ports:
-      - "5000:5000"
+      - "5433:5432"
+    environment:
+      - POSTGRES_PASSWORD
+      - POSTGRES_USER
+      - POSTGRES_DB
+    networks:
+      - app-network
+  ginserv:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      target: ginserv
+      x-bake:
+        tags:
+          - docker.pkg.github.com/utain/go-12factor-example/go-server:gin
+        platforms:
+          - linux/amd64
+          - linux/arm64
+    image: docker.pkg.github.com/utain/go-12factor-example/go-server:gin
+    environment:
+      - DATABASE_URL
+      - DATABASE_POOL_MAXOPEN
+      - DATABASE_POOL_MAXIDLE
+    ports:
+      - "8000:8000"
     networks:
       - app-network
     depends_on:
       - postgres
     links:
       - postgres
-  postgres:
-    image: postgres:13.2
-    ports:
-      - "5433:5432"
+  fiberserv:
+    build:
+      context: .
+      target: fiberserv
+      x-bake:
+        tags:
+          - docker.pkg.github.com/utain/go-12factor-example/go-server:fiber
+        platforms:
+          - linux/amd64
+          - linux/arm64
+    image: docker.pkg.github.com/utain/go-12factor-example/go-server:fiber
     environment:
-      - POSTGRES_PASSWORD=P@55w0rd
-      - POSTGRES_USER=example
-      - POSTGRES_DB=example
+      - DATABASE_URL
+      - DATABASE_POOL_MAXOPEN
+      - DATABASE_POOL_MAXIDLE
+    ports:
+      - "8001:8000"
     networks:
       - app-network
+    depends_on:
+      - postgres
+    links:
+      - postgres

@@ -1,0 +1,27 @@
+version: "3.8"
+networks:
+  dev-network:
+services:
+  server:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.dev
+    environment:
+      - DATABASE_URL
+    ports:
+      - "8000:8000"
+    command: "go run . gin"
+    volumes:
+      - ./:/app/
+    networks:
+      - dev-network
+  postgres:
+    image: postgres:13.6-alpine3.15
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_PASSWORD
+      - POSTGRES_USER
+      - POSTGRES_DB
+    networks:
+      - dev-network

@@ -1,0 +1,5 @@
+database:
+  url: postgresql://example:P@55w0rd@localhost:5432/example?sslmode=disable
+  pool:
+    maxOpen: 50
+    maxIdle: 10
