@@ -2,7 +2,6 @@ package core
 
 import (
 	"github.com/utain/go/example/internal/core/todos"
-	"github.com/utain/go/example/internal/core/todos/services"
 	"github.com/utain/go/example/internal/logs"
 )
 
@@ -14,6 +13,6 @@ type ServicesContainer struct {
 func ServicesRegister(log logs.Logging, persistences PersistencesContainer) ServicesContainer {
 	return ServicesContainer{
 		Log:             log,
-		TodoServicePort: services.TodoService(log, persistences.TodoPersistencePort),
+		TodoServicePort: todos.TodoService(log, persistences.TodoPersistencePort),
 	}
 }

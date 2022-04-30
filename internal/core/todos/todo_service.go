@@ -1,17 +1,16 @@
-package services
+package todos
 
 import (
 	"context"
 
 	"github.com/utain/go/example/internal/core/models"
-	"github.com/utain/go/example/internal/core/todos"
 	"github.com/utain/go/example/internal/errs"
 	"github.com/utain/go/example/internal/logs"
 
 	"github.com/google/uuid"
 )
 
-func TodoService(log logs.Logging, repo todos.TodoPersistencePort) todos.TodoServicePort {
+func TodoService(log logs.Logging, repo TodoPersistencePort) TodoServicePort {
 	return &todoService{
 		repo: repo,
 		log:  log,
@@ -20,10 +19,10 @@ func TodoService(log logs.Logging, repo todos.TodoPersistencePort) todos.TodoSer
 
 type todoService struct {
 	log  logs.Logging
-	repo todos.TodoPersistencePort
+	repo TodoPersistencePort
 }
 
-func (s *todoService) AddTodo(ctx context.Context, cmd todos.AddTodoDto) (out *models.Todo, err error) {
+func (s *todoService) AddTodo(ctx context.Context, cmd AddTodoDto) (out *models.Todo, err error) {
 	if len(cmd.Title) == 0 {
 		return nil, errs.ErrInvalidTodoTitle
 	}
@@ -37,7 +36,7 @@ func (s *todoService) AddTodo(ctx context.Context, cmd todos.AddTodoDto) (out *m
 	return
 }
 
-func (s *todoService) GetByID(ctx context.Context, query todos.GetFirstDto) (out *models.Todo, err error) {
+func (s *todoService) GetByID(ctx context.Context, query GetFirstDto) (out *models.Todo, err error) {
 	defer func() {
 		if err != nil {
 			s.log.Error("GetByID", logs.F{"error": err, "id": query.ID})
@@ -55,7 +54,7 @@ func (s *todoService) GetByID(ctx context.Context, query todos.GetFirstDto) (out
 	return out, nil
 }
 
-func (s *todoService) UpdateTodoStatus(ctx context.Context, cmd todos.UpdateTodoStatusDto) (out *models.Todo, err error) {
+func (s *todoService) UpdateTodoStatus(ctx context.Context, cmd UpdateTodoStatusDto) (out *models.Todo, err error) {
 	if cmd.ID == uuid.Nil {
 		return nil, errs.ErrInvalidTodoID
 	}
@@ -66,7 +65,7 @@ func (s *todoService) UpdateTodoStatus(ctx context.Context, cmd todos.UpdateTodo
 	return out, err
 }
 
-func (s *todoService) Filter(ctx context.Context, filter todos.FilterTodoDto) (out []models.Todo, err error) {
+func (s *todoService) Filter(ctx context.Context, filter FilterTodoDto) (out []models.Todo, err error) {
 	out, err = s.repo.FindByNameAndStatus(ctx, filter)
 	if err != nil {
 		return out, errs.ErrUnknown.With("filter", filter).With("error", err)

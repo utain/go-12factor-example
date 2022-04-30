@@ -1,4 +1,4 @@
-package services_test
+package todos_test
 
 import (
 	"context"
@@ -7,7 +7,6 @@ import (
 	"github.com/utain/go/example/internal/adapters/zapadapter"
 	"github.com/utain/go/example/internal/core/models"
 	"github.com/utain/go/example/internal/core/todos"
-	"github.com/utain/go/example/internal/core/todos/services"
 	"github.com/utain/go/example/internal/errs"
 
 	"github.com/google/uuid"
@@ -60,7 +59,7 @@ func TestAddTodo(t *testing.T) {
 	t.Run("should error when todo title is empty", func(t *testing.T) {
 		mock := &MockTodoPersistence{}
 		command := todos.AddTodoDto{}
-		serv := services.TodoService(zaplog, mock)
+		serv := todos.TodoService(zaplog, mock)
 
 		out, err := serv.AddTodo(context.Background(), command)
 		assert.Equal(t, errs.ErrInvalidTodoTitle, err)
@@ -70,7 +69,7 @@ func TestAddTodo(t *testing.T) {
 	t.Run("should error when todo title is empty and description provided", func(t *testing.T) {
 		mock := &MockTodoPersistence{}
 		command := todos.AddTodoDto{Description: "Description"}
-		serv := services.TodoService(zaplog, mock)
+		serv := todos.TodoService(zaplog, mock)
 
 		out, err := serv.AddTodo(context.Background(), command)
 		assert.Equal(t, errs.ErrInvalidTodoTitle, err)
@@ -80,7 +79,7 @@ func TestAddTodo(t *testing.T) {
 	t.Run("should error when todo description is empty", func(t *testing.T) {
 		mock := &MockTodoPersistence{}
 		command := todos.AddTodoDto{Title: "Title"}
-		serv := services.TodoService(zaplog, mock)
+		serv := todos.TodoService(zaplog, mock)
 
 		out, err := serv.AddTodo(context.Background(), command)
 		assert.Equal(t, errs.ErrInvalidTodoDescription, err)
@@ -91,7 +90,7 @@ func TestAddTodo(t *testing.T) {
 		mock := &MockTodoPersistence{}
 		command := todos.AddTodoDto{Title: "Title", Description: "Description"}
 		mock.On("InsertTodo", context.Background(), command).Return(nil, errs.ErrCannotInsertTodo)
-		serv := services.TodoService(zaplog, mock)
+		serv := todos.TodoService(zaplog, mock)
 
 		out, err := serv.AddTodo(context.Background(), command)
 		assert.Equal(t, errs.ErrCannotInsertTodo, err)
@@ -108,7 +107,7 @@ func TestAddTodo(t *testing.T) {
 			Status:      models.StatusPending,
 		}
 		mock.On("InsertTodo", context.Background(), command).Return(need, nil)
-		serv := services.TodoService(zaplog, mock)
+		serv := todos.TodoService(zaplog, mock)
 
 		out, err := serv.AddTodo(context.Background(), command)
 		assert.Nil(t, err)
@@ -120,7 +119,7 @@ func TestGetTodoByID(t *testing.T) {
 	zaplog := zapadapter.ZapAdapter()
 	t.Run("should got error when id is empty", func(t *testing.T) {
 		mock := &MockTodoPersistence{}
-		serv := services.TodoService(zaplog, mock)
+		serv := todos.TodoService(zaplog, mock)
 		query := todos.GetFirstDto{}
 		out, err := serv.GetByID(context.Background(), query)
 		assert.Equal(t, errs.ErrInvalidTodoID, err)
@@ -133,7 +132,7 @@ func TestGetTodoByID(t *testing.T) {
 			ID: uuid.New(),
 		}
 		mock.On("GetByID", context.Background(), query.ID).Return(nil, nil)
-		serv := services.TodoService(zaplog, mock)
+		serv := todos.TodoService(zaplog, mock)
 
 		out, err := serv.GetByID(context.Background(), query)
 		assert.Equal(t, errs.ErrTodoNotFound, err)
@@ -152,7 +151,7 @@ func TestGetTodoByID(t *testing.T) {
 			Status:      models.StatusPending,
 		}
 		mock.On("GetByID", context.Background(), query.ID).Return(need, nil)
-		serv := services.TodoService(zaplog, mock)
+		serv := todos.TodoService(zaplog, mock)
 
 		out, err := serv.GetByID(context.Background(), query)
 		assert.Equal(t, need, out)
@@ -164,7 +163,7 @@ func TestUpdateTodo(t *testing.T) {
 	zaplog := zapadapter.ZapAdapter()
 	t.Run("should error when todo id is empty", func(t *testing.T) {
 		mock := &MockTodoPersistence{}
-		serv := services.TodoService(zaplog, mock)
+		serv := todos.TodoService(zaplog, mock)
 
 		out, err := serv.UpdateTodoStatus(context.Background(), todos.UpdateTodoStatusDto{})
 		assert.Equal(t, errs.ErrInvalidTodoID, err)
@@ -173,7 +172,7 @@ func TestUpdateTodo(t *testing.T) {
 
 	t.Run("should error when todo is missing", func(t *testing.T) {
 		mock := &MockTodoPersistence{}
-		serv := services.TodoService(zaplog, mock)
+		serv := todos.TodoService(zaplog, mock)
 		cmd := todos.UpdateTodoStatusDto{
 			ID:     uuid.New(),
 			Status: models.StatusDoing,
@@ -187,7 +186,7 @@ func TestUpdateTodo(t *testing.T) {
 
 	t.Run("should update without any error", func(t *testing.T) {
 		mock := &MockTodoPersistence{}
-		serv := services.TodoService(zaplog, mock)
+		serv := todos.TodoService(zaplog, mock)
 		status := models.StatusDoing
 		cmd := todos.UpdateTodoStatusDto{
 			ID:     uuid.New(),
@@ -211,7 +210,7 @@ func TestFilterTodo(t *testing.T) {
 	zaplog := zapadapter.ZapAdapter()
 	t.Run("should show all when no filter", func(t *testing.T) {
 		mock := &MockTodoPersistence{}
-		serv := services.TodoService(zaplog, mock)
+		serv := todos.TodoService(zaplog, mock)
 		filter := todos.FilterTodoDto{}
 		need := []models.Todo{}
 		mock.On("FindByNameAndStatus", context.Background(), filter).Return(need, nil)
@@ -223,7 +222,7 @@ func TestFilterTodo(t *testing.T) {
 
 	t.Run("should error when persistence error", func(t *testing.T) {
 		mock := &MockTodoPersistence{}
-		serv := services.TodoService(zaplog, mock)
+		serv := todos.TodoService(zaplog, mock)
 		filter := todos.FilterTodoDto{}
 		need := []models.Todo{}
 		mock.On("FindByNameAndStatus", context.Background(), filter).Return(need, nil)
