@@ -6,7 +6,7 @@ require (
 	github.com/DATA-DOG/go-sqlmock v1.5.0
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/gin-contrib/pprof v1.3.0
-	github.com/gin-gonic/gin v1.7.4
+	github.com/gin-gonic/gin v1.7.7
 	github.com/go-playground/validator/v10 v10.9.0 // indirect
 	github.com/google/go-cmp v0.5.6 // indirect
 	github.com/jinzhu/now v1.1.2 // indirect
@@ -73,7 +73,7 @@ require (
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/mailru/easyjson v0.7.6 // indirect
 	github.com/swaggo/gin-swagger v1.3.2
-	github.com/swaggo/swag v1.7.3 // indirect
+	github.com/swaggo/swag v1.7.3
 	golang.org/x/net v0.0.0-20210405180319-a5a99cb37ef4 // indirect
 	golang.org/x/tools v0.1.2 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
