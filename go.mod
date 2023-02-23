@@ -19,8 +19,8 @@ require (
 	github.com/spf13/viper v1.8.1
 	github.com/stretchr/testify v1.7.0
 	golang.org/x/crypto v0.0.0-20210915214749-c084706c2272 // indirect
-	golang.org/x/sys v0.0.0-20210925032602-92d5a993a665 // indirect
-	golang.org/x/text v0.3.7 // indirect
+	golang.org/x/sys v0.0.0-20220722155257-8c9f86f7a55f // indirect
+	golang.org/x/text v0.3.8 // indirect
 	gopkg.in/ini.v1 v1.63.2 // indirect
 )
 
@@ -73,8 +73,8 @@ require (
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/mailru/easyjson v0.7.6 // indirect
 	github.com/swaggo/gin-swagger v1.3.2
-	github.com/swaggo/swag v1.7.3 // indirect
-	golang.org/x/net v0.0.0-20210405180319-a5a99cb37ef4 // indirect
-	golang.org/x/tools v0.1.2 // indirect
+	github.com/swaggo/swag v1.7.3
+	golang.org/x/net v0.0.0-20220722155237-a158d28d115b // indirect
+	golang.org/x/tools v0.1.12 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
 )
